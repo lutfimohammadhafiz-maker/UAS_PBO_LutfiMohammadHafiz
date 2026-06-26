@@ -1,5 +1,5 @@
 <?php
-// MahasiswaBidikmisi.php - Subclass untuk Mahasiswa Bidikmisi
+// MahasiswaBidikmisi.php
 require_once 'Mahasiswa.php';
 
 class MahasiswaBidikmisi extends Mahasiswa {
@@ -13,25 +13,10 @@ class MahasiswaBidikmisi extends Mahasiswa {
         $this->danaSakuSubsidi = $danaSakuSubsidi;
     }
     
-    // Getter dan Setter
-    public function getNomorKipKuliah() {
-        return $this->nomorKipKuliah;
-    }
+    public function getNomorKipKuliah() { return $this->nomorKipKuliah; }
+    public function getDanaSakuSubsidi() { return $this->danaSakuSubsidi; }
     
-    public function setNomorKipKuliah($nomorKipKuliah) {
-        $this->nomorKipKuliah = $nomorKipKuliah;
-    }
-    
-    public function getDanaSakuSubsidi() {
-        return $this->danaSakuSubsidi;
-    }
-    
-    public function setDanaSakuSubsidi($danaSakuSubsidi) {
-        $this->danaSakuSubsidi = $danaSakuSubsidi;
-    }
-    
-    // Method select-where untuk MahasiswaBidikmisi
-    public function selectWhereBidikmisi($koneksi, $kondisi) {
+    public function selectWhereBidikmisi($koneksi, $kondisi = '1=1') {
         $query = "SELECT * FROM tabel_mahasiswa 
                   WHERE jenis_pembiayaan = 'bidikmisi' AND $kondisi";
         $result = mysqli_query($koneksi, $query);
@@ -40,29 +25,25 @@ class MahasiswaBidikmisi extends Mahasiswa {
         while ($row = mysqli_fetch_assoc($result)) {
             $data_bidikmisi[] = $row;
         }
-        
         return $data_bidikmisi;
     }
     
-    // Implementasi method abstract
     public function hitungTagihanSemester() {
-        // Mahasiswa bidikmisi membayar UKT yang sudah disubsidi
-        $total_tagihan = $this->tarifUktNominal - $this->danaSakuSubsidi;
-        return $total_tagihan > 0 ? $total_tagihan : 0;
+        return 0;
     }
     
     public function tampilkanSpesifikasiAkademik() {
-        echo "=== SPESIFIKASI MAHASISWA BIDIKMISI ===\n";
-        echo "ID Mahasiswa        : " . $this->id_mahasiswa . "\n";
-        echo "Nama                : " . $this->nama_mahasiswa . "\n";
-        echo "NIM                 : " . $this->nim . "\n";
-        echo "Semester            : " . $this->semester . "\n";
-        echo "Tarif UKT           : Rp " . number_format($this->tarifUktNominal, 0, ',', '.') . "\n";
-        echo "Jenis Biaya         : Bidikmisi\n";
-        echo "Nomor KIP Kuliah    : " . $this->nomorKipKuliah . "\n";
-        echo "Dana Saku Subsidi   : Rp " . number_format($this->danaSakuSubsidi, 0, ',', '.') . "\n";
-        echo "Tagihan Semester    : Rp " . number_format($this->hitungTagihanSemester(), 0, ',', '.') . "\n";
-        echo "-----------------------------------------\n";
+        return [
+            'id' => $this->id_mahasiswa,
+            'nama' => $this->nama_mahasiswa,
+            'nim' => $this->nim,
+            'semester' => $this->semester,
+            'tarif_ukt' => $this->tarifUktNominal,
+            'jenis' => 'Bidikmisi',
+            'nomor_kip' => $this->nomorKipKuliah,
+            'dana_saku' => $this->danaSakuSubsidi,
+            'tagihan' => $this->hitungTagihanSemester()
+        ];
     }
 }
 ?>
