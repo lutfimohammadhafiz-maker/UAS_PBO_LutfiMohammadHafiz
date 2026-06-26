@@ -1,5 +1,5 @@
 <?php
-// config/database.php - Koneksi Database
+// config/database.php
 $host = 'localhost';
 $user = 'root';
 $password = '';
@@ -11,6 +11,5 @@ if (!$koneksi) {
     die("Koneksi database gagal: " . mysqli_connect_error());
 }
 
-// Set charset ke UTF-8
 mysqli_set_charset($koneksi, "utf8");
 ?>
